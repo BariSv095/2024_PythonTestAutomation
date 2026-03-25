@@ -3,6 +3,8 @@ import time
 import unittest
 
 from faker import Faker
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -59,15 +61,26 @@ class HRMBaseFixture(BrowserFixture):
         self.main_menu = MainMenu(self.browser)
 
 
-class AdminLoginFixture(HRMBaseFixture):
-    welcome_message_element = (By.ID, 'welcome')
+class AdminLoginFixture(unittest.TestCase):
+    # welcome_message_element = (By.ID, 'welcome')
 
     def setUp(self):
-        super().setUp()
+        # 1. Initialize the browser without a manual path.
+        # Selenium Manager handles the version matching automatically.
+        # self.driver_path = r'C:\Users\BariSv01\.wdm\drivers\chromedriver\win64\144.0.7559.133\chromedriver-win32\chromedriver.exe'
+        # self.browser = webdriver.Chrome(service=Service(self.driver_path))
+        self.browser = webdriver.Chrome()
+        self.browser.get('http://hrm-online.portnov.com/')
+        time.sleep(2)
+        self.browser.find_element(By.ID, 'txtUsername').send_keys('admin')
+        self.browser.find_element(By.ID, 'txtPassword').send_keys('password')
+        self.browser.find_element(By.ID, 'btnLogin').click()
 
-        self.page.login_page.go_to_page()
-        self.page.login_page.authenticate()
-        self.page.login_page.wait_for_successful_login()
+        # super().setUp()
+        #
+        # self.page.login_page.go_to_page()
+        # self.page.login_page.authenticate()
+        # self.page.login_page.wait_for_successful_login()
         # self.wait.until(EC.presence_of_element_located(self.welcome_message_element))
         # OR
         # self.wait.until(EC.url_contains('/pim/viewEmployeeList'))
