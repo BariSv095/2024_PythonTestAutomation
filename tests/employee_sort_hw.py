@@ -23,10 +23,14 @@ class EmployeeSort(AdminLoginFixture):
                 previous = name_element.text
 
             if has_pagination:
-                browser.find_element(By.CSS_SELECTOR, '.next>a').click()
                 pagination_text = browser.find_element(By. CSS_SELECTOR, '.paging .desc').text
                 pagination_pieces = pagination_text.split(' of ')
                 is_last_page = pagination_pieces[-1] in pagination_pieces[0]
+                if not is_last_page:
+                    browser.find_element(By.CSS_SELECTOR, '.next>a').click()
+
+            else:
+                is_last_page = True
 
 
 

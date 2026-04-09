@@ -6,6 +6,7 @@ from faker import Faker
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 from fixtures.pages import Pages
@@ -62,7 +63,7 @@ class HRMBaseFixture(BrowserFixture):
 
 
 class AdminLoginFixture(unittest.TestCase):
-    # welcome_message_element = (By.ID, 'welcome')
+    welcome_message_element = (By.ID, 'welcome')
 
     def setUp(self):
         # 1. Initialize the browser without a manual path.
@@ -71,10 +72,15 @@ class AdminLoginFixture(unittest.TestCase):
         # self.browser = webdriver.Chrome(service=Service(self.driver_path))
         self.browser = webdriver.Chrome()
         self.browser.get('http://hrm-online.portnov.com/')
-        time.sleep(2)
-        self.browser.find_element(By.ID, 'txtUsername').send_keys('admin')
-        self.browser.find_element(By.ID, 'txtPassword').send_keys('password')
-        self.browser.find_element(By.ID, 'btnLogin').click()
+        browser = self.browser
+        browser.find_element(By.ID, 'txtUsername').send_keys('admin')
+        browser.find_element(By.ID, 'txtPassword').send_keys('password')
+        browser.find_element(By.ID, 'btnLogin').click()
+        self.wait = WebDriverWait(browser, 5)
+        self.wait.until(EC.presence_of_element_located(self.welcome_message_element))
+
+        def tearDown(self):
+            self.browser.quit()
 
         # super().setUp()
         #
