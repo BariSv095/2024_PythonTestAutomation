@@ -1,16 +1,7 @@
-import unittest
+from fixtures.base_fixture import AdminLoginFixture
 
 
-class AddEmployee(unittest.TestCase):
-    def setUp(self):
-        # start browser
-        pass
-    def tearDown(self):
-        # quit browser
-        pass
-    def login_as_admin(self):
-        # login as admin
-        pass
+class AddEmployee(AdminLoginFixture):
     def add_employee(self):
         # create new employee/create first and last name, save generated user's ID
         pass
