@@ -8,12 +8,14 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
 
 from fixtures.pages import Pages
 from lib.base_methods import BaseMethods
 from lib.browser import get_browser
 from menus.main_menu import MainMenu
 from menus.user_menu import UserMenu
+from pages.login import LoginPage
 from tests import DEFAULT_WAIT, DOMAIN, PROJECT_DIR
 
 
@@ -68,15 +70,12 @@ class AdminLoginFixture(unittest.TestCase):
     def setUp(self):
         # 1. Initialize the browser without a manual path.
         # Selenium Manager handles the version matching automatically.
-        # self.driver_path = r'C:\Users\BariSv01\.wdm\drivers\chromedriver\win64\144.0.7559.133\chromedriver-win32\chromedriver.exe'
-        # self.browser = webdriver.Chrome(service=Service(self.driver_path))
-        self.browser = webdriver.Chrome()
+
+        self.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
         self.browser.get('http://hrm-online.portnov.com/')
-        browser = self.browser
-        browser.find_element(By.ID, 'txtUsername').send_keys('admin')
-        browser.find_element(By.ID, 'txtPassword').send_keys('password')
-        browser.find_element(By.ID, 'btnLogin').click()
-        self.wait = WebDriverWait(browser, 5)
+        self.login_page = LoginPage(self.browser)
+        self.login_page.authenticate()
+        self.wait = WebDriverWait(self.browser, 5)
         self.wait.until(EC.presence_of_element_located(self.welcome_message_element))
 
         def tearDown(self):
